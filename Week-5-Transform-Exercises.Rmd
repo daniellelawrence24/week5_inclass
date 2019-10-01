@@ -105,9 +105,13 @@ babynames %>%
 3. Plot the results as a line graph with `year` on the x axis and `prop` on the y axis
 
 ```{r}
-
-
+babynames %>% 
+  filter(name=="Danielle", sex=="F") %>% 
+  select(name, sex, prop, year) %>% 
+  ggplot() +
+  geom_line(aes(year, prop))
 ```
+
 
 ## Your Turn 6
 
@@ -119,9 +123,9 @@ Copmplete the code below to extract the rows where `name == "Khaleesi"`. Then us
 *(Hint: Be sure to remove each `_` before running the code)*
 
 ```{r}
-babynames ___ 
-  filter(_______________________) ___
-  ___________(total = ________, first = _______)
+babynames %>%  
+  filter(name=="Khaleesi") %>% 
+  summarise(total = sum(n), first = min(year))
 ```
 
 ## Your Turn 7
@@ -132,9 +136,11 @@ Use `group_by()`, `summarise()`, and `arrange()` to display the ten most popular
 
 ```{r}
 babynames %>%
-  _______(name, sex) %>% 
-  _______(total = _____(n)) %>% 
-  _______(desc(_____))
+  group_by(name, sex) %>% 
+  summarise(total = sum(n)) %>% 
+  arrange(desc(total)) %>% head(10) %>% 
+  ggplot() +
+    geom_col(aes(x = name, y= total, fill=sex))
 ```
 
 
@@ -147,8 +153,8 @@ Rank each name _within its year and sex_.
 
 ```{r}
 babynames %>% 
-  group_by(____, ____) %>% 
-  ______(rank = min_rank(____(prop)))
+  group_by(year, sex) %>% 
+  mutate(rank = min_rank(desc(prop)))
 ```
 
 
